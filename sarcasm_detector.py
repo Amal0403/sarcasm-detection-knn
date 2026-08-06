@@ -12,7 +12,7 @@ data_file = "twitter_training.csv"
 df = pd.read_csv(data_file, header=None)
 df.columns = ["tweet_id", "entity", "sentiment", "Sentence"]
 
-print("✅ Dataset loaded successfully! Shape:", df.shape)
+print("Dataset loaded successfully! Shape:", df.shape)
 print(df.head())
 
 # Step 2: Convert sentiment to binary label
@@ -24,7 +24,7 @@ df["Label"] = df["sentiment"].apply(
 
 df = df[["Sentence", "Label"]]
 
-print("\n✅ Data after preprocessing:")
+print("\n Data after preprocessing:")
 print(df.head())
 
 
@@ -36,12 +36,12 @@ y = df["Label"]
 
 # Step 4: Load SentenceTransformer model
 
-print("\n🔁 Loading SentenceTransformer model...")
+print("\n Loading SentenceTransformer model...")
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
 # Step 5: Encode dataset into embeddings
 
-print("\n⚙️ Encoding sentences into embeddings...")
+print("\nEncoding sentences into embeddings...")
 X_vectors = model.encode(X, batch_size=32, show_progress_bar=True)
 
 
@@ -53,14 +53,14 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 # Step 7: Train KNN Classifier
 
-print("\n🚀 Training KNN Classifier...")
+print("\nTraining KNN Classifier...")
 knn = KNeighborsClassifier(n_neighbors=5, n_jobs=-1)
 knn.fit(X_train, y_train)
 
 # Step 8: Evaluate Model
 
 y_pred = knn.predict(X_test)
-print("\n📊 Model Evaluation:")
+print("\nModel Evaluation:")
 print("Accuracy:", accuracy_score(y_test, y_pred))
 print("\nClassification Report:\n", classification_report(y_test, y_pred))
 
@@ -71,13 +71,13 @@ print("\n🤖 Type any sentence to check if it's sarcastic (type 'exit' to quit)
 while True:
     user_input = input(">> ")
     if user_input.lower() == "exit":
-        print("👋 Exiting... Goodbye!")
+        print("Exiting... Goodbye!")
         break
 
     user_vector = model.encode([user_input])
     prediction = knn.predict(user_vector)[0]
 
     if prediction == 1:
-        print("😏 This sentence is **Sarcastic / Negative**!\n")
+        print("This sentence is **Sarcastic / Negative**!\n")
     else:
-        print("🙂 This sentence is **Not Sarcastic / Positive**.\n")
+        print("This sentence is **Not Sarcastic / Positive**.\n")
